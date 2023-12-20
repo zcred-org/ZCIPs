@@ -10,7 +10,7 @@ updated: 2023-20-12
 
 ## Abstract
 
-The protocol establishes the basic principles governing zero-knowledge
+The specification establishes the basic principles governing zero-knowledge
 credential architectures and defines the data structure of these
 credentials. It illustrates how zk-credentials can achieve compatibility
 with various zero-knowledge proof systems such as zk-SNARKs or
@@ -21,20 +21,20 @@ proof systems.
 
 ## Motivation
 
-This protocol is necessary to provide the subject with the ability to
+This specification is necessary to provide the subject with the ability to
 confirm their attributes in the digital space without disclosing the
 attributes themselves. This allows the subject to avoid leaving a
 digital trace of their identity in the digital space and gives them
 complete control over their representation in the digital world.
 
-Furthermore, in ideological terms, this protocol brings us closer to a
+Furthermore, in ideological terms, this specification brings us closer to a
 future where the concept of
 [self-sovereign identity](https://github.com/WebOfTrustInfo/self-sovereign-identity/blob/master/self-sovereign-identity-principles.md)
 makes more sense than the current state of affairs with the
 [verifiable credentials](https://www.w3.org/TR/vc-data-model-2.0/)
 [(VCs) data model by W3C](https://www.w3.org/TR/vc-data-model-2.0/).
 
-Another important goal of this protocol is to create a digital
+Another important goal of this specification is to create a digital
 environment where the subject can use digital credentials to confirm
 their attributes wherever possible – in a centralized application, smart
 contract, zero-knowledge application, etc. This is another crucial issue
