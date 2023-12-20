@@ -2,7 +2,7 @@
 zcip: 2
 title: Zero-Knowledge Credentials
 author: Pavel Deshevov (@pavelgoodpal), Sergey Ukustov (@ukstv)
-status: Draft
+status: Final
 type: Standard
 created: 2023-20-12
 updated: 2023-20-12
