@@ -8,7 +8,7 @@ The goal of the ZCred Improvement Proposals (ZCIPs) is to create standards and d
 
 To create a new ZCIP simply follow these steps:
 
-1. Review ZCIP-1.
+1. Review [ZCIP-1](./ZCIPs/zcip-1.md).
 2. Fork the repository.
 3. Add your ZCIP to your fork of the repository. There is a [template ZCIP here](./zcip-template.md).
 4. Submit a Pull Request.

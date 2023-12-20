@@ -15,7 +15,7 @@ replaces: <ZCIP number(s); if multiple, format as `[1,2]` array>
 
 
 <!--PROPOSE A NEW ZCIP-->
-
+[zcip-template.md](zcip-template.md)
 <!--NOTE: 
 You can leave these HTML comments in your ZCIP and delete the visible text guides, they will not appear and may be helpful to refer to if you edit your ZCIP again.-->
 
