@@ -10,25 +10,25 @@ updated: 2023-20-12
 
 ## Abstract
 
-The specification establishes the basic principles governing zero-knowledge
-credential architectures and defines the data structure of these
-credentials. It illustrates how zk-credentials can achieve compatibility
-with various zero-knowledge proof systems such as zk-SNARKs or
-zk-STARKs. The transformation graph plays a crucial role in facilitating
-this compatibility. It defines how zk-credentials can be transformed or
-adapted to suit the distinct requirements of different zero-knowledge
-proof systems.
+The specification establishes the basic principles governing
+zero-knowledge credential architectures and defines the data structure
+of these credentials. It illustrates how zk-credentials can achieve
+compatibility with various zero-knowledge proof systems such as
+zk-SNARKs or zk-STARKs. The transformation graph plays a crucial role in
+facilitating this compatibility. It defines how zk-credentials can be
+transformed or adapted to suit the distinct requirements of different
+zero-knowledge proof systems.
 
 ## Motivation
 
-This specification is necessary to provide the subject with the ability to
-confirm their attributes in the digital space without disclosing the
+This specification is necessary to provide the subject with the ability
+to confirm their attributes in the digital space without disclosing the
 attributes themselves. This allows the subject to avoid leaving a
 digital trace of their identity in the digital space and gives them
 complete control over their representation in the digital world.
 
-Furthermore, in ideological terms, this specification brings us closer to a
-future where the concept of
+Furthermore, in ideological terms, this specification brings us closer
+to a future where the concept of
 [self-sovereign identity](https://github.com/WebOfTrustInfo/self-sovereign-identity/blob/master/self-sovereign-identity-principles.md)
 makes more sense than the current state of affairs with the
 [verifiable credentials](https://www.w3.org/TR/vc-data-model-2.0/)
@@ -38,16 +38,17 @@ Another important goal of this specification is to create a digital
 environment where the subject can use digital credentials to confirm
 their attributes wherever possible – in a centralized application, smart
 contract, zero-knowledge application, etc. This is another crucial issue
-that the [VCs specification](https://www.w3.org/TR/vc-data-model-2.0/)is
-unable to address.
+that the
+[VCs specification](https://www.w3.org/TR/vc-data-model-2.0/)is unable
+to address.
 
 
 ## Specification
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-"OPTIONAL" in this document are to be interpreted as described in [RFC
-2119](https://datatracker.ietf.org/doc/html/rfc2119) and
+"OPTIONAL" in this document are to be interpreted as described in
+[RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) and
 [RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174).
 
 
@@ -111,6 +112,19 @@ the `verifier`.
 
 **Step 4:** The `verifier` validates the received `zk-credential proof`.
 
+In a simplified manner, the process can be described as follows:
+
+The `verifier` sends a `proposal` to the `subject` to confirm the
+subject's attributes using a specific `zk-credential`. Upon receiving
+the `proposal` the `subject` decides whether to accept or reject it. If
+the `subject` accepts the `proposal`, they use the necessary
+`zk-credential`. If the `subject` does not have the `zk-credential`,
+they request it from the `issuer`. The `subject` generates a
+`zk-credential proof` corresponding to the `constraints` outlined in the
+`proposal`.The `subject` then sends the generated `zk-credential proof`
+to the `verifier`. The `verifier` verifies the received `zk-credential
+proof`.
+
 The process described above is illustrated in the diagram below.
 
 ![image.png](../assets/zcip-2/zk-credentials-architecture.png)
@@ -146,12 +160,17 @@ properties: `type`, `issuanceDate`, `validFrom`, `validUntil`, and
 `subject`. While `zk-credential` `attributes` can include other
 properties, the ones listed above are mandatory.
 
+The `attributes` represent properties of both the `zk-credential` itself
+and the `subject`.
+
+
 #### Type attribute
 
 The `type` is `attributes` property that defines `zk-credential` purpose
-and other properties. `type` property value MUST be a string.
+and other it's and `subject` properties. `type` property value MUST be a
+string.
 
-Example of the zk-credential with attributes property:
+Example of the zk-credential with attributes type property:
 
 ```json
 {
@@ -175,8 +194,8 @@ Example of the zk-credential with attributes property:
 #### Issuance date attribute
 
 The `issuanceDate` property represents the date and time when the
-`zk-credential` was issued and MUST be represented as a string according
-to the
+`zk-credential` was issued by `issuer` and MUST be represented as a
+string according to the
 [ISO 8601 date and time format](https://www.iso.org/iso-8601-date-and-time-format.html).
 
 #### Valid from attribute
@@ -186,20 +205,29 @@ The `validFrom` property represents the date and time from which the
 represented as a string according to the
 [ISO 8601 date and time format](https://www.iso.org/iso-8601-date-and-time-format.html).
 
+The `validFrom` property indicates the point in time from which the
+`zk-credential` becomes valid. The key distinction between `validFrom`
+and `issuanceDate` lies in the fact that `issuanceDate` signifies when
+the `zk-credential` was issued, while `validFrom` denotes when the
+`zk-credential` come into effect. Consequently, the `validFrom` property
+may be greater than, less than, or equal to the `issuanceDate` along the
+temporal timeline.
+
 #### Valid until attribute
 
 The `validUntil` property represents the date and time from which the
-`zk-credential` becomes invalid. The `validUntil` property MUST be
-represented as a string according to the
+`zk-credential` becomes invalid or expired. The `validUntil` property
+MUST be represented as a string according to the
 [ISO 8601 date and time format](https://www.iso.org/iso-8601-date-and-time-format.html).
 
 #### Subject attribute
 
 The `subject` property represents `subject` attributes and properties.
 The `subject` property is object that MUST includes `id` property, where
-value is [`identifier`](#identifier), other properties are optional.
+value is
+[`identifier`](#identifier), other properties are not mandatory.
 
-Example of the zk-credential with attributes property:
+Example of the zk-credential with attributes subject property:
 
 ```json
 {
@@ -227,14 +255,74 @@ Example of the zk-credential with attributes property:
   MUST either be specified with definite values or have predefined
   defaults.
 - JSON list data structures are not permitted within `zk-credential
-  attributes`. These attributes should exclusively consist of string,
-  number, boolean, or object values.
+  attributes`. These attributes MUST consist of string, number, boolean,
+  or object values.
+
+These limitations are REQUIRED, as otherwise the programmable process of
+transforming `attributes` into a format provided by the zk-proof system
+would be difficult or impossible.
+
+Example of the correct zk-credential attributes:
+
+```json
+{
+  "attributes": {
+    "type": "passport",
+    "issuanceDate": "2023-12-18T13:57:50.582Z",
+    "validFrom": "2023-12-18T13:57:50.582Z",
+    "validUntil": "2030-12-18T13:57:50.582Z",
+    "subject": {
+      "id": {
+        "type": "ethereum:address",
+        "key": "0x67a4a8ae79ad76f6978455bda38451f16e4dd06e"
+      },
+      "name": "John",
+      "birthDate": "2000-01-01",
+      "liveAddresses": {
+        "0": "Bo. el Sedillo, 8A, 39715 Entrambasaguas, Cantabria, Spain",
+        "1": "İskenderpaşa, Molla Hüsrev Cd., 34080 Fatih/İstanbul, Turkey",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": ""
+      }
+    }
+  }
+}
+```
+
+Example of the INCORRECT zk-credential attributes
+
+```json
+{
+  "attributes": {
+    "type": "passport",
+    "issuanceDate": "2023-12-18T13:57:50.582Z",
+    "validFrom": "2023-12-18T13:57:50.582Z",
+    "validUntil": null,
+    "subject": {
+      "id": {
+        "type": "ethereum:address",
+        "key": "0x67a4a8ae79ad76f6978455bda38451f16e4dd06e"
+      },
+      "name": "John",
+      "birthDate": "2000-01-01",
+      "liveAddresses": [
+        "Bo. el Sedillo, 8A, 39715 Entrambasaguas, Cantabria, Spain",
+        "İskenderpaşa, Molla Hüsrev Cd., 34080 Fatih/İstanbul, Turkey"
+      ]
+    }
+  }
+}
+```
+
 
 ### Transformation Graph
 
 #### Purpose
 
-The [`attributes`](#attributes) and other properties within the
+The
+[`attributes`](#attributes) and other properties within the
 `zk-credential` may not align with zero-knowledge proof systems like
 zk-SNARKs or zk-STARKs. To establish compatibility between
 `zk-credential` and various zero-knowledge proof systems, an
@@ -604,8 +692,8 @@ const signature = sign(issuerPrivateKey, linearHash);
 #### Signature proofs in zk-credential
 
 Each signature proof MUST possess a unique path in the `zk-credential
-proofs` property. The path for a signature proof MUST adhere to
-the [JSON pointer format](https://datatracker.ietf.org/doc/html/rfc6901):
+proofs` property. The path for a signature proof MUST adhere to the
+[JSON pointer format](https://datatracker.ietf.org/doc/html/rfc6901):
 
 ```
 zk-credential/proofs/<proof_type>/<issuer_identifier>
@@ -685,13 +773,13 @@ Example of a zk-credential with signature proof:
               "bytes-uint128"
             ],
             "issuanceDate": [
-              ""
+              "isodate-unixtime"
             ],
             "validFrom": [
-              ""
+              "isodate-unixtime"
             ],
             "validUntil": [
-              ""
+              "isodate-unixtime"
             ],
             "subject": {
               "id": {
@@ -724,8 +812,8 @@ Example of a zk-credential with signature proof:
 ### Zero-Knowledge Credential
 
 A `zk-credential` is an object that MUST include two properties:
-[`attributes`](#attributes) and [`proofs`](#signature-proofs), with a
-minimum of one proof.
+[`attributes`](#attributes) and
+[`proofs`](#signature-proofs), with a minimum of one proof.
 
 Example of a zk-credential:
 
@@ -781,13 +869,13 @@ Example of a zk-credential:
               "bytes-uint128"
             ],
             "issuanceDate": [
-              ""
+              "isodate-unixtime"
             ],
             "validFrom": [
-              ""
+              "isodate-unixtime"
             ],
             "validUntil": [
-              ""
+              "isodate-unixtime"
             ],
             "subject": {
               "id": {
@@ -829,6 +917,8 @@ The zk-credential format enables the following:
    off-chain services using just one credential.
 2. Independence from a specific implementation of the zk-proof system.
 3. Enable zero-disclosure property for subject attributes.
+4. Adheres to the concept of
+   [`credible neutrality`](https://nakamoto.com/credible-neutrality/)
 
 
 ## Reference Implementation
@@ -873,4 +963,5 @@ not
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](../assets/LICENSE-CC0.md).
+Copyright and related rights waived via
+[CC0](../assets/LICENSE-CC0.md).
